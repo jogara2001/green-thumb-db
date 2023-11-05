@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-export async function POST(request: Request) {
+export async function POST (request: Request) {
   const requestUrl = new URL(request.url)
   const formData = await request.formData()
   const email = String(formData.get('email'))
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
     email,
     password,
     options: {
-      emailRedirectTo: `${requestUrl.origin}/auth/callback`,
-    },
+      emailRedirectTo: `${requestUrl.origin}/auth/callback`
+    }
   })
 
   if (error) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       `${requestUrl.origin}/login?error=Could not authenticate user`,
       {
         // a 301 status is required to redirect from a POST to a GET route
-        status: 301,
+        status: 301
       }
     )
   }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     `${requestUrl.origin}/login?message=Check email to continue sign in process`,
     {
       // a 301 status is required to redirect from a POST to a GET route
-      status: 301,
+      status: 301
     }
   )
 }
