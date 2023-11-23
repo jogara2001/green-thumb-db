@@ -23,7 +23,8 @@ export function PlantCard (props: PlantData) {
   }
 
   useEffect(() => {
-    fetchPicture()
+    // Need to remove void and handle errors
+    void fetchPicture()
   }, [])
 
   return (

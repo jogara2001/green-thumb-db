@@ -28,7 +28,8 @@ export default function PlantSearch () {
 
   const handleKeyPress = (event: any) => {
     if (event.key === 'Enter') {
-      fetchPlants()
+      // Need to remove void and handle errors
+      void fetchPlants()
     }
   }
 
@@ -52,9 +53,9 @@ export default function PlantSearch () {
   }
 
   useEffect(() => {
-    console.log('called 1')
-    fetchPlants()
-    fetchCharacteristics()
+    // Need to remove void and handle errors
+    void fetchPlants()
+    void fetchCharacteristics()
   }, [])
 
   return (
