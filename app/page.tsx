@@ -1,11 +1,9 @@
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material'
 import PlantSearch from '@/components/plant-search'
 
-export const dynamic = 'force-dynamic'
-
 export default function Index () {
   // Server component can't have state (this file should be a server component)
-  // Instead this file (or another child server component) should make the call to figure out user, then that should be passed to some user/avatar client component
+  // Instead this user state business will be done in an avatar / user component
   // const [user, setUser] = useState(null)
   const user = null
 

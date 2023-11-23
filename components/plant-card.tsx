@@ -1,3 +1,4 @@
+'use client'
 import { Card, CardContent, CardMedia, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 

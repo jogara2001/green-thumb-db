@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 // This is a mess that needs cleaning
 export async function POST (request: Request) {
   const { search } = await request.json()
