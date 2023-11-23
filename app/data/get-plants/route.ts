@@ -14,7 +14,7 @@ export async function POST (request: Request) {
 
   if (error) {
     console.log(error)
-    return []
+    return  NextResponse.json([])
   }
   return NextResponse.json(data)
 }
