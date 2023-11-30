@@ -20,7 +20,11 @@ export function PlantCard (props: PlantData) {
       })
     })
     const newPlantPicture = await response.json()
-    setPlantPicture(newPlantPicture.url)
+    if (newPlantPicture.url != null) {
+      setPlantPicture(newPlantPicture.url)
+    } else {
+      setPlantPicture('/logo.png')
+    }
   }
 
   useEffect(() => {
@@ -38,7 +42,7 @@ export function PlantCard (props: PlantData) {
       <CardContent>
         <Typography variant="h5">{props.common_name.toUpperCase()}</Typography>
         <Typography variant="h6">{props.symbol}</Typography>
-        <Typography variant="body1">{props.scientific_name}</Typography>
+        <Typography variant="body1" noWrap>{props.scientific_name}</Typography>
         <Typography variant="body2" color="text.secondary">
             Lizards are a widespread group of squamate reptiles, with over 6,000
             species, ranging across all continents except Antarctica
