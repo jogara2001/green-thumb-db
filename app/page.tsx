@@ -1,44 +1,40 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { AppBar, Avatar, Box, Button, TableContainer, Toolbar, Container, Typography } from '@mui/material'
+import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material'
+import PlantSearch from '@/components/plant-search'
 
-export const dynamic = 'force-dynamic'
+export default function Index () {
+  // Server component can't have state (this file should be a server component)
+  // Instead this user state business will be done in an avatar / user component
+  // const [user, setUser] = useState(null)
+  const user = null
 
-export default async function Index () {
-  const supabase = createServerComponentClient({ cookies })
-
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser()
 
   return (
-    <main>
-      <Container>
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar>
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-              <Typography>
-                Green Thumb DB
-              </Typography>
-              {user
-                ? (
-                <Avatar></Avatar>
-                  )
-                : <Button
-                  variant="contained"
-                  color="secondary"
-                  href="/login"
-                  >
-                    Login
-                </Button>
-              }
-            </Toolbar>
-          </AppBar>
-          <TableContainer>
-
-          </TableContainer>
-        </Box>
-      </Container>
-    </main>
+    <div>
+      <AppBar position="sticky">
+        <Toolbar sx={{
+          justifyContent: 'space-between'
+        }}>
+          <Typography>
+            Green Thumb DB
+          </Typography>
+          {user
+            ? (
+          <Avatar></Avatar>
+              )
+            : <Button
+            variant="contained"
+            color="secondary"
+            href="/login"
+          >
+            Login
+          </Button>
+          }
+        </Toolbar>
+      </AppBar>
+      <PlantSearch></PlantSearch>
+    </div>
   )
 }
