@@ -11,11 +11,11 @@ export async function POST (request: Request) {
   const { nameFilter, page } = await request.json()
   const start = page * RESULTS_PER_PAGE
 
-  var { count } = await supabase
+  let { count } = await supabase
     .from('plants')
     .select('*', { count: 'exact', head: true })
     .ilike('common_name', `%${nameFilter}%`)
-  
+
   if (count == null) {
     count = 0
   }
