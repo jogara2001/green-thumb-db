@@ -16,8 +16,6 @@ interface CharacteristicData {
   name: string
 }
 
-const PAGE_SIZE = 12
-
 export default function PlantSearch () {
   const [expandFilters, setExpandFilters] = useState(false)
   const [characteristicCategories, setCharacteristicCategories] = useState<CharacteristicCategoryData[]>([])
@@ -26,10 +24,11 @@ export default function PlantSearch () {
   const [selectedCategory, setSelectedCategory] = useState<CharacteristicCategoryData | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [pageNum, setPageNum] = useState(0)
+  const [totalPages, setTotalPages] = useState(0)
 
   const handlePageChange = (page: number) => {
     setPageNum(page)
-    void fetchPlants(page * PAGE_SIZE)
+    void fetchPlants(page)
   }
 
   const openFiltersDrawer = (category: CharacteristicCategoryData) => {
@@ -58,22 +57,22 @@ export default function PlantSearch () {
     setCharacteristicCategories(newCharacteristics)
   }
 
-  const fetchPlants = async (start: number) => {
+  const fetchPlants = async (page: number) => {
     const response = await fetch('data/get-plants', {
       method: 'POST',
       body: JSON.stringify({
         nameFilter: inputText,
-        start,
-        end: start + PAGE_SIZE - 1
+        page
       })
     })
-    const newPlants = await response.json()
-    setPlants(newPlants)
+    const { pages, plants } = await response.json()
+    setTotalPages(pages)
+    setPlants(plants)
   }
 
   useEffect(() => {
     // Need to remove void and handle errors
-    void fetchPlants(pageNum * 10)
+    void fetchPlants(pageNum)
     void fetchCharacteristics()
   }, [])
 
@@ -107,7 +106,7 @@ export default function PlantSearch () {
             <Grid item>
               <Pagination
                 page={pageNum + 1}
-                count={10}
+                count={totalPages}
                 color={'primary'}
                 onChange={(event, page) => { handlePageChange(page - 1) }}
               />
