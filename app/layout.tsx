@@ -1,5 +1,11 @@
 import ThemeRegistry from './ThemeRegistry'
 
+export const metadata = {
+  icons: {
+    icon: '/icon.png'
+  },
+}
+
 export default function RootLayout ({
   children
 }: {
