@@ -1,9 +1,10 @@
 'use client'
-import { Typography, TextField, IconButton, Stack, Collapse, Grid, Button, SwipeableDrawer, Pagination } from '@mui/material'
+import { Typography, TextField, IconButton, Stack, Collapse, Grid, Button, SwipeableDrawer, LinearProgress } from '@mui/material'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { Search } from '@mui/icons-material'
 import { type PlantData, PlantCard } from './plant-card'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 interface CharacteristicCategoryData {
   id: number
@@ -24,11 +25,14 @@ export default function PlantSearch () {
   const [selectedCategory, setSelectedCategory] = useState<CharacteristicCategoryData | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [pageNum, setPageNum] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
 
-  const handlePageChange = (page: number) => {
-    setPageNum(page)
-    void fetchPlants(page)
+  const fetchNextPage = async () => {
+    const nextPage = pageNum + 1
+    setPageNum(nextPage)
+    const newPlants = await fetchPlants(nextPage)
+    setHasMore(newPlants.length === 12)
+    setPlants([...plants, ...newPlants])
   }
 
   const openFiltersDrawer = (category: CharacteristicCategoryData) => {
@@ -42,13 +46,15 @@ export default function PlantSearch () {
 
   const handleKeyPress = (event: any) => {
     if (event.key === 'Enter') {
-      handleSearch()
+      void handleSearch()
     }
   }
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setPageNum(0)
-    void fetchPlants(0)
+    const newPlants = await fetchPlants(0)
+    setHasMore(newPlants.length === 12)
+    setPlants(newPlants)
   }
 
   const fetchCharacteristics = async () => {
@@ -62,17 +68,23 @@ export default function PlantSearch () {
       method: 'POST',
       body: JSON.stringify({
         nameFilter: inputText,
-        page
+        page,
+        nativeStatus: {
+          country: '',
+          state: '',
+          county: '',
+          status: '',
+          type: ''
+        }
       })
     })
-    const { pages, plants } = await response.json()
-    setTotalPages(pages)
-    setPlants(plants)
+    const { plants } = await response.json()
+    return plants
   }
 
   useEffect(() => {
     // Need to remove void and handle errors
-    void fetchPlants(pageNum)
+    void handleSearch()
     void fetchCharacteristics()
   }, [])
 
@@ -81,7 +93,7 @@ export default function PlantSearch () {
           <Stack direction="row" padding={2} spacing={1}>
             <IconButton onClick={() => { setExpandFilters(!expandFilters) }}><FilterListIcon/></IconButton>
             <TextField fullWidth label="Search Common Name" onChange={handleInputChange} value={inputText} onKeyDown={handleKeyPress}></TextField>
-            <IconButton onClick={handleSearch}><Search/></IconButton>
+            <IconButton onClick={() => { void handleSearch() }}><Search/></IconButton>
           </Stack>
 
           <Collapse in={expandFilters}>
@@ -94,24 +106,20 @@ export default function PlantSearch () {
             </Grid>
           </Collapse>
 
-          <Grid container spacing={3} justifyContent={'center'}>
-            {plants.map((value) => (
-              <Grid item key={value.id} xs="auto">
-                <PlantCard {...value}></PlantCard>
+            <InfiniteScroll
+              dataLength={plants.length}
+              next={() => { void fetchNextPage() }}
+              hasMore={hasMore}
+              loader={<LinearProgress/>}
+            >
+              <Grid container spacing={3} justifyContent={'center'}>
+                {plants.map((value) => (
+                  <Grid item key={value.id} xs="auto">
+                    <PlantCard {...value}></PlantCard>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-
-          <Grid container spacing={3} justifyContent={'center'} padding={2}>
-            <Grid item>
-              <Pagination
-                page={pageNum + 1}
-                count={totalPages}
-                color={'primary'}
-                onChange={(event, page) => { handlePageChange(page - 1) }}
-              />
-            </Grid>
-          </Grid>
+            </InfiniteScroll>
 
           <SwipeableDrawer
             anchor={'bottom'}

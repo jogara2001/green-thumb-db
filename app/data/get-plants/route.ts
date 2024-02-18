@@ -6,37 +6,59 @@ export const dynamic = 'force-dynamic'
 
 const RESULTS_PER_PAGE = 12
 
+interface QueryParams {
+  nameFilter?: string
+  page: number
+  nativeStatus?: {
+    country?: string
+    state?: string
+    county?: string
+    status?: string
+    type?: string
+  }
+}
+
 export async function POST (request: Request) {
   const supabase = createRouteHandlerClient({ cookies })
-  const { nameFilter, page } = await request.json()
-  const start = page * RESULTS_PER_PAGE
+  const params: QueryParams = await request.json()
+  const start = params.page * RESULTS_PER_PAGE
 
-  let { count } = await supabase
+  let query = supabase
     .from('plants')
-    .select('*', { count: 'exact', head: true })
-    .ilike('common_name', `%${nameFilter}%`)
+    .select('id, symbol, scientific_name, common_name, native_statuses!inner(country, state, county, status, type)')
 
-  if (count == null) {
-    count = 0
+  if (params.nameFilter && params.nameFilter !== '') {
+    query = query.ilike('common_name', `%${params.nameFilter}%`)
+  }
+  if (params.nativeStatus) {
+    if (params.nativeStatus.country && params.nativeStatus.country !== '') {
+      query = query.eq('native_statuses.country', params.nativeStatus.country)
+    }
+    if (params.nativeStatus.state && params.nativeStatus.state !== '') {
+      query = query.eq('native_statuses.state', params.nativeStatus.state)
+    }
+    if (params.nativeStatus.county && params.nativeStatus.county !== '') {
+      query = query.eq('native_statuses.county', params.nativeStatus.county)
+    }
+    if (params.nativeStatus.status && params.nativeStatus.status !== '') {
+      query = query.eq('native_statuses.status', params.nativeStatus.status)
+    }
+    if (params.nativeStatus.type && params.nativeStatus.type !== '') {
+      query = query.eq('native_statuses.type', params.nativeStatus.type)
+    }
   }
 
-  const totalPages = Math.ceil(count / RESULTS_PER_PAGE)
-
-  const { data, error } = await supabase
-    .from('plants')
-    .select('*')
-    .ilike('common_name', `%${nameFilter}%`)
-    .range(start, start + RESULTS_PER_PAGE - 1)
+  const { data, error } = await query.range(start, start + RESULTS_PER_PAGE - 1)
 
   if (error) {
     console.log(error)
     return NextResponse.json({
-      pages: 0,
-      plants: []
+      plants: [],
+      error: true
     })
   }
   return NextResponse.json({
-    pages: totalPages,
-    plants: data
+    plants: data,
+    error: false
   })
 }
