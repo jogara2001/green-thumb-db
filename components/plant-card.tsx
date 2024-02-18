@@ -1,5 +1,5 @@
 'use client'
-import { Card, CardContent, CardMedia, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
 export interface PlantData {
@@ -36,18 +36,15 @@ export function PlantCard (props: PlantData) {
     <Card variant="outlined" sx={{ width: 345, height: 345 }}>
       <CardMedia
           component="img"
-          height="140"
+          height="225"
           image={plantPicture}
         />
       <CardContent>
-        <Typography variant="h5">{props.common_name.toUpperCase()}</Typography>
-        <Typography variant="h6">{props.symbol}</Typography>
-        <Typography variant="body1" noWrap>{props.scientific_name}</Typography>
-        <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
-          </Typography>
+        <Typography noWrap variant="h5">{props.common_name.toUpperCase()}</Typography>
       </CardContent>
+      <CardActions>
+          <Button size='small'>Learn More</Button>
+        </CardActions>
     </Card>
   )
 }

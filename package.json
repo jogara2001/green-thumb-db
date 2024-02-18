@@ -10,12 +10,13 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
-    "@mui/material": "latest",
+    "@mui/material": "^5.15.10",
     "@supabase/auth-helpers-nextjs": "latest",
     "@supabase/supabase-js": "latest",
     "next": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-infinite-scroll-component": "^6.1.0"
   },
   "devDependencies": {
     "@types/node": "20.3.1",
