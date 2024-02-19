@@ -31,6 +31,7 @@ module.exports = {
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/naming-convention": "off"
     }
 }

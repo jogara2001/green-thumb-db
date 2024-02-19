@@ -3,7 +3,7 @@ import { Typography, TextField, IconButton, Stack, Collapse, Grid, Button, Swipe
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { Search } from '@mui/icons-material'
-import { type PlantData, PlantCard } from './plant-card'
+import { PlantCard, type PlantCardProps } from './plant-card'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 interface CharacteristicCategoryData {
@@ -20,7 +20,7 @@ interface CharacteristicData {
 export default function PlantSearch () {
   const [expandFilters, setExpandFilters] = useState(false)
   const [characteristicCategories, setCharacteristicCategories] = useState<CharacteristicCategoryData[]>([])
-  const [plants, setPlants] = useState<PlantData[]>([])
+  const [plants, setPlants] = useState<PlantCardProps[]>([])
   const [inputText, setInputText] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CharacteristicCategoryData | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -106,20 +106,20 @@ export default function PlantSearch () {
             </Grid>
           </Collapse>
 
-            <InfiniteScroll
+          <InfiniteScroll
               dataLength={plants.length}
               next={() => { void fetchNextPage() }}
               hasMore={hasMore}
               loader={<LinearProgress/>}
-            >
-              <Grid container spacing={3} justifyContent={'center'}>
-                {plants.map((value) => (
-                  <Grid item key={value.id} xs="auto">
-                    <PlantCard {...value}></PlantCard>
-                  </Grid>
-                ))}
-              </Grid>
-            </InfiniteScroll>
+          >
+            <Grid container spacing={3} justifyContent={'center'} paddingBottom={3}>
+              {plants.map((value) => (
+                <Grid item key={value.id} xs="auto">
+                  <PlantCard {...value}></PlantCard>
+                </Grid>
+              ))}
+            </Grid>
+          </InfiniteScroll>
 
           <SwipeableDrawer
             anchor={'bottom'}

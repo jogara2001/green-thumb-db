@@ -50,6 +50,8 @@ export async function POST (request: Request) {
 
   const { data, error } = await query.range(start, start + RESULTS_PER_PAGE - 1)
 
+  const newArray = data?.map(({ native_statuses, ...keepAttrs }) => keepAttrs)
+
   if (error) {
     console.log(error)
     return NextResponse.json({
@@ -58,7 +60,7 @@ export async function POST (request: Request) {
     })
   }
   return NextResponse.json({
-    plants: data,
+    plants: newArray,
     error: false
   })
 }
