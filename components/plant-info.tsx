@@ -27,13 +27,13 @@ export function PlantInfo (plant: Plant) {
       <Typography variant={'h5'}>{plant.common_name.toUpperCase()}</Typography>
       <Typography variant={'body1'}>{plant.scientific_name}</Typography>
       <Button variant='outlined' onClick={() => { void fetchCareInstructions() }} disabled={generateCalled}>Generate Care Instructions</Button>
-      {generateCalled
-        ? careInstructions
-          ? <Typography variant={'body2'} style={{ whiteSpace: 'pre-line' }}>{careInstructions}</Typography>
-          : <LinearProgress></LinearProgress>
-        : null
+      {
+        generateCalled
+          ? careInstructions
+            ? <Typography variant={'body2'} style={{ whiteSpace: 'pre-line' }}>{careInstructions}</Typography>
+            : <LinearProgress></LinearProgress>
+          : null
       }
-
       {
         plant.native_statuses
           ? <Accordion>
