@@ -1,13 +1,39 @@
 'use client'
-import { Accordion, AccordionDetails, AccordionSummary, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, LinearProgress, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { type Plant } from './plant-card'
 import { ArrowDropDown } from '@mui/icons-material'
+import { useState } from 'react'
 
 export function PlantInfo (plant: Plant) {
+  const [careInstructions, setCareInstructions] = useState(undefined)
+  const [generateCalled, setGenerateCalled] = useState(false)
+
+  const fetchCareInstructions = async () => {
+    if (!generateCalled) {
+      setGenerateCalled(true)
+      const response = await fetch('data/get-care-instructions', {
+        method: 'POST',
+        body: JSON.stringify({
+          common_name: plant.common_name
+        })
+      })
+      const { content } = await response.json()
+      setCareInstructions(content)
+    }
+  }
+
   return (
     <Stack direction={'column'} padding={2} spacing={1}>
       <Typography variant={'h5'}>{plant.common_name.toUpperCase()}</Typography>
       <Typography variant={'body1'}>{plant.scientific_name}</Typography>
+      <Button variant='outlined' onClick={() => { void fetchCareInstructions() }} disabled={generateCalled}>Generate Care Instructions</Button>
+      {generateCalled
+        ? careInstructions
+          ? <Typography variant={'body2'} style={{ whiteSpace: 'pre-line' }}>{careInstructions}</Typography>
+          : <LinearProgress></LinearProgress>
+        : null
+      }
+
       {
         plant.native_statuses
           ? <Accordion>
