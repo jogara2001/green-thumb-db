@@ -9,6 +9,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
+    "@googlemaps/google-maps-services-js": "^3.3.42",
     "@mui/icons-material": "latest",
     "@mui/material": "^5.15.10",
     "@supabase/auth-helpers-nextjs": "latest",

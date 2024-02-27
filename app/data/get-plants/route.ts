@@ -37,7 +37,7 @@ export async function POST (request: Request) {
     if (params.nativeStatus.state && params.nativeStatus.state !== '') {
       query = query.eq('native_statuses.state', params.nativeStatus.state)
     }
-    if (params.nativeStatus.county && params.nativeStatus.county !== '') {
+    if (params.nativeStatus.county && params.nativeStatus.county !== '' && params.nativeStatus.country === 'United States') {
       query = query.eq('native_statuses.county', params.nativeStatus.county)
     }
     if (params.nativeStatus.status && params.nativeStatus.status !== '') {
